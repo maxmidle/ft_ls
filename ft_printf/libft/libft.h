@@ -19,6 +19,7 @@
 # include "libft_struct.h"
 
 char	*ft_strnconc(char **s1, size_t ls1, char *s2, size_t ls2);
+int	ft_tablen(char **tab);
 void	ft_freetab(char **str);
 void	ft_strconc(char **s1, char *s2);
 void	ft_strbackconc(char **s1, char *s2);

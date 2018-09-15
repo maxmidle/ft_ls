@@ -1,6 +1,6 @@
 #include "ft_ls.h"
 
-char	**arg_verif(int ac, char **av)
+char	**arg_verif(int ac, char **av, int *name_error)
 {
 	int	i;
 	int	ret;
@@ -8,7 +8,7 @@ char	**arg_verif(int ac, char **av)
 
 	i = 1;
 	ret = 1;
-	arg_ret = (char **)malloc(sizeof(char *) * ac);
+	arg_ret = (char **)malloc(sizeof(char *) * ac + 1);
 	arg_ret[0] = ft_strnew(0);
 	while (i < ac && av[i][0] == '-' && ret != 2)
 	{
@@ -20,7 +20,7 @@ char	**arg_verif(int ac, char **av)
 	ret = 1;
 	while (i < ac)
 	{
-		if (name_verif(av[i], arg_ret, ret))
+		if (name_verif(av[i], arg_ret, ret, name_error))
 			ret++;
 		i++;
 	}
@@ -52,12 +52,14 @@ int	param_verif(char *param, char **arg_ret)
 	return (1);
 }
 
-int	name_verif(char *name, char **arg_ret, int ret)
+int	name_verif(char *name, char **arg_ret, int ret, int *name_error)
 {
-	struct stat sb;
+	struct stat	sb;
+
 	if (stat(name, &sb) == -1)
 	{
 		ft_printf("ft_ls: %s: No such file or directory\n", name);
+		*name_error = 1;
 		return (0);
 	}
 	arg_ret[ret] = ft_strdup(name);
@@ -68,15 +70,13 @@ int main(int ac, char **av)
 {
 	int i = 0;
 	char **arg_ret;
-	arg_ret = arg_verif(ac, av);
+	int	name_error;
+
+	name_error = 0;
+	arg_ret = arg_verif(ac, av, &name_error);
 	if (!arg_ret)
 		return (0);
-	while (arg_ret[i])
-	{
-		ft_printf("%s\n", arg_ret[i]);
-		i++;
-	}
-	i = 0;
+	ft_ls(arg_ret, name_error);
 	while (arg_ret[i])
 	{
 		free(arg_ret[i]);

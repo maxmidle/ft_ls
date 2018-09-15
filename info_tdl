@@ -1,0 +1,2 @@
+printf mois de date de creation (imprecis):
+	ft_printf("%s", (sb.st_birthtimespec.tv_sec % 31557600) / 2736000 + 1);
