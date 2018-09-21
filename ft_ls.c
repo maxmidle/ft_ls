@@ -1,72 +1,119 @@
 #include "ft_ls.h"
 
-int	ft_ls(char **arg_ret, int name_error)
+int	ft_ls(char *param, int name_error, file_info **fl)
 {
-	if (ft_tablen(arg_ret) == 1 && name_error == 1)
-		return (2);
-	else if (ft_tablen(arg_ret) == 1)
-	{
-		arg_ret[1] = ft_strdup(".");
-		arg_ret[2] = NULL;
-	}
-	if (ft_tablen(arg_ret) == 2)
-			single_file(arg_ret[0], arg_ret[1]);
-	else
-		multiple_file(arg_ret);
-	return (1);
-}
-
-int	single_file(char *param, char *file_name)
-{
-	struct stat sb;
-	
-	stat(file_name, &sb);
-	if (S_ISDIR(sb.st_mode))
-		handle_dir(param, file_name, sb);
-	else if (S_ISREG(sb.st_mode))
-		ft_printf("%s\n", get_name(file_name));
-	return (1);
-}
-
-int	multiple_file(char **arg_ret)
-{
-	int		i;
 	struct stat	sb;
+	file_info	*list;
 
-	i = 1;
-	while (arg_ret[i])
+	list = *fl;
+	if (list == NULL && name_error == 1)
+		return (2);
+	else if (list == NULL)
 	{
-		stat(arg_ret[i], &sb);
-		if (S_ISREG(sb.st_mode))
-			ft_printf("%s\n", arg_ret[i]);
-		i++;
+		stat(".", &sb);
+		list = fl_new(sb, ".");
 	}
-	i = 1;
-	while (arg_ret[i])
+	if (list->next == NULL)
+		single_file(param, list);
+	else
+		multiple_dir(param, fl, 0);
+	return (1);
+}
+
+int	single_file(char *param, file_info *fl)
+{
+	if (S_ISDIR(fl->st_mode))
+		handle_dir(param, fl);
+	else if (S_ISREG(fl->st_mode))
+		ft_printf("%s\n", fl->f_name);
+	return (1);
+}
+
+int	multiple_dir(char *param, file_info **fl, int recu)
+{
+	int		dir;
+	file_info	*list;
+	char		*last;
+
+	dir = 0;
+	list = *fl;
+	if (recu == 0)
+		multiple_file(*fl);
+	while (list)
 	{
-		stat(arg_ret[i], &sb);
-		if (S_ISDIR(sb.st_mode))
+		if (S_ISDIR(list->st_mode))
 		{
-			ft_printf("%s/:\n", get_name(arg_ret[i]));
-			single_file(arg_ret[0], (arg_ret[i]));
+			last = &list->f_name[ft_strlen(list->f_name) - 1];
+			if (recu == 0 || !(last[0] == '.' && last[1] == '\0'))
+			{
+				ft_printf("%s:\n", list->f_name);
+				single_file(param, list);
+			}
 		}
-		i++;
-		if (arg_ret[i] && S_ISDIR(sb.st_mode))
+		list = list->next;
+		if (list && S_ISDIR(list->st_mode))
 			ft_putchar('\n');
 	}
+	fl_free(fl);
 	return (1);
 }
 
-int	handle_dir(char *param, char *dir_name, struct stat sb)
+void	multiple_file(file_info *fl)
+{
+	file_info *list;
+	int dir;
+
+	list = fl;
+	dir = 0;
+	while (list)
+	{
+		if (S_ISREG(list->st_mode))
+			ft_printf("%s\n", list->f_name);
+		if (S_ISDIR(list->st_mode))
+			dir = 1;
+		list = list->next;
+	}
+	if (dir)
+		ft_putchar('\n');
+}
+
+int	handle_dir(char *param, file_info *fl)
 {
 	DIR		*dirp;
 	struct dirent	*dp;
+	struct stat	sb;
+	file_info	*list;
+	file_info	*fl_bis;
+	char		*path;
 
-	dirp = opendir(dir_name);
-	sb.st_mode = S_IFDIR;
-	param = NULL;
+	path = NULL;
+	dirp = opendir(fl->f_name);
+	fl_bis = NULL;
 	while ((dp = readdir(dirp)))
-		ft_printf("%s\n", dp->d_name);
+	{
+		if ((ft_strchr(param, 'a') && dp->d_name[0] == '.') ||
+			 dp->d_name[0] != '.')
+		{
+			list = fl_bis;
+			ft_printf("%s\n", dp->d_name);
+			path = get_path(fl->f_name, dp->d_name);
+			stat(path, &sb);
+			if (fl_bis == NULL)
+				fl_bis = fl_new(sb, path);
+			else
+			{
+				while (list->next)
+					list = list->next;
+				list->next = fl_new(sb, path);
+			}
+			ft_strdel(&path);
+		}
+	}
+	if (ft_strchr(param, 'R'))
+	{
+		return (multiple_dir(param, &fl_bis, 1));
+	}
+	fl_free(&fl_bis);
 	closedir(dirp);
 	return (0);
 }

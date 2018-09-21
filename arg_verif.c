@@ -1,18 +1,17 @@
 #include "ft_ls.h"
 
-char	**arg_verif(int ac, char **av, int *name_error)
+char	*arg_verif(int ac, char **av, int *name_error, file_info **fl)
 {
 	int	i;
 	int	ret;
-	char	**arg_ret;
+	char	*param;
 
 	i = 1;
 	ret = 1;
-	arg_ret = (char **)malloc(sizeof(char *) * ac + 1);
-	arg_ret[0] = ft_strnew(0);
+	param = ft_strnew(0);
 	while (i < ac && av[i][0] == '-' && ret != 2)
 	{
-		if (!(ret = param_verif(av[i], arg_ret)))
+		if (!(ret = param_verif(av[i], &param)))
 			return (NULL);
 		if (ret != 2)
 			i++;
@@ -20,31 +19,28 @@ char	**arg_verif(int ac, char **av, int *name_error)
 	ret = 1;
 	while (i < ac)
 	{
-		if (name_verif(av[i], arg_ret, ret, name_error))
-			ret++;
+		name_verif(av[i], name_error, fl);
 		i++;
 	}
-	arg_ret[ret] = NULL;
-	return (arg_ret);
+	return (param);
 }
 
-int	param_verif(char *param, char **arg_ret)
+int	param_verif(char *av, char **param)
 {
 	int	i;
 
 	i = 1;
-	if (param[i] == '\0')
+	if (av[i] == '\0')
 		return (2);
-	while (param[i])
+	while (av[i])
 	{
-		if (ft_isparam(param[i]) && !ft_strchr(*arg_ret, param[i]))
-			ft_strnconc(arg_ret, ft_strlen(*arg_ret), &param[i], 1);
-		else if (!ft_isparam(param[i]))
+		if (ft_isparam(av[i]) && !ft_strchr(*param, av[i]))
+			ft_strnconc(param, ft_strlen(*param), &av[i], 1);
+		else if (!ft_isparam(av[i]))
 		{
-			ft_printf("ft_ls: illegal option -- %c\n", param[i]);
+			ft_printf("ft_ls: illegal option -- %c\n", av[i]);
  			ft_printf("usage: ft_ls [-Ralrt] [file...]\n");
-			free(arg_ret);
-			free(*arg_ret);
+			free(*param);
 			return (0);
 		}
 		i++;
@@ -52,36 +48,61 @@ int	param_verif(char *param, char **arg_ret)
 	return (1);
 }
 
-int	name_verif(char *name, char **arg_ret, int ret, int *name_error)
+int	name_verif(char *name, int *error, file_info **fl)
 {
 	struct stat	sb;
+	file_info *list;
 
+	list = *fl;
 	if (stat(name, &sb) == -1)
 	{
 		ft_printf("ft_ls: %s: No such file or directory\n", name);
-		*name_error = 1;
+		*error = 1;
 		return (0);
 	}
-	arg_ret[ret] = ft_strdup(name);
+	if (*fl == NULL)
+		*fl = fl_new(sb, name);
+	else
+	{
+		while (list->next)
+			list = list->next;
+		list->next = fl_new(sb, name);
+	}
 	return (1);
+}
+
+file_info	*fl_new(struct stat sb, char *name)
+{
+	file_info	*fl;
+
+	fl = (file_info*)malloc(sizeof(file_info));
+	fl->f_name = ft_strdup(name);
+	fl->st_dev = sb.st_dev;
+	fl->st_mode = sb.st_mode;
+	fl->st_nlink = sb.st_nlink;
+	fl->st_uid = sb.st_uid;
+	fl->st_gid = sb.st_gid;
+	fl->st_size = sb.st_size;
+	fl->st_atimespec = sb.st_atimespec;
+	fl->st_mtimespec = sb.st_mtimespec;
+	fl->st_ctimespec = sb.st_ctimespec;
+	fl->st_birthtimespec = sb.st_birthtimespec;
+	fl->next = NULL;
+	return (fl);
 }
 
 int main(int ac, char **av)
 {
-	int i = 0;
-	char **arg_ret;
+	char *param;
 	int	name_error;
+	file_info	*fl;
 
 	name_error = 0;
-	arg_ret = arg_verif(ac, av, &name_error);
-	if (!arg_ret)
+	fl = NULL;
+	param = arg_verif(ac, av, &name_error, &fl);
+	if (!param)
 		return (0);
-	ft_ls(arg_ret, name_error);
-	while (arg_ret[i])
-	{
-		free(arg_ret[i]);
-		i++;
-	}
-	free(arg_ret);
+	ft_ls(param, name_error, &fl);
+	free(param);
 	return (0);
 }
