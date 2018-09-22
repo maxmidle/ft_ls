@@ -47,3 +47,18 @@ void	fl_free(file_info **fl)
 		*fl = list;
 	}
 }
+
+int	fl_count(file_info **fl)
+{
+	int count;
+	file_info *list;
+	
+	count = 0;
+	list = *fl;
+	while (list)
+	{
+		count++;
+		list = list->next;
+	}
+	return (count);
+}
