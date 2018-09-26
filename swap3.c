@@ -2,24 +2,28 @@
 
 void	fl_swap_gid(file_info **fl)
 {
-	file_info *list;
+	char		*tmp;
+	file_info	*list;
 
 	list = *fl;
-	gid_t tmp;
 
-	tmp = list->st_gid;
-	list->st_gid = list->next->st_gid;
-	list->next->st_gid = tmp;
+	tmp = list->g_name;
+	list->g_name = list->next->g_name;
+	list->next->g_name = tmp;
 }
 
 void	fl_swap_size(file_info **fl)
 {
-	file_info *list;
+	file_info	*list;
+	off_t		tmp;
+	char		*chtmp;
 
 	list = *fl;
-	off_t tmp;
 
 	tmp = list->st_size;
+	chtmp = list->f_size;
 	list->st_size = list->next->st_size;
+	list->f_size = list->next->f_size;
 	list->next->st_size = tmp;
+	list->next->f_size = chtmp;
 }

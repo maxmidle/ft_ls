@@ -10,7 +10,7 @@ int	ft_ls(char *param, int name_error, file_info **fl)
 		return (2);
 	else if (list == NULL)
 	{
-		stat(".", &sb);
+		lstat(".", &sb);
 		list = fl_new(sb, ".");
 	}
 	if (list->next == NULL)
@@ -95,7 +95,7 @@ int	handle_dir(char *param, file_info *fl)
 			list = fl_bis;
 			ft_printf("%s\n", dp->d_name);
 			path = get_path(fl->f_name, dp->d_name);
-			stat(path, &sb);
+			lstat(path, &sb);
 			if (fl_bis == NULL)
 				fl_bis = fl_new(sb, path);
 			else

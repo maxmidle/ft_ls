@@ -54,7 +54,7 @@ int	name_verif(char *name, int *error, file_info **fl)
 	file_info *list;
 
 	list = *fl;
-	if (stat(name, &sb) == -1)
+	if (lstat(name, &sb) == -1)
 	{
 		ft_printf("ft_ls: %s: No such file or directory\n", name);
 		*error = 1;
@@ -74,14 +74,20 @@ int	name_verif(char *name, int *error, file_info **fl)
 file_info	*fl_new(struct stat sb, char *name)
 {
 	file_info	*fl;
-
+	struct group	*group;
+	struct passwd	*owner;
+	
+	group = getgrgid(sb.st_gid);
+	owner = getpwuid(sb.st_uid);
 	fl = (file_info*)malloc(sizeof(file_info));
 	fl->f_name = ft_strdup(name);
+	fl->f_nlink = ft_itoa(sb.st_nlink);
+	fl->f_size = ft_itoa(sb.st_size);
+	fl->o_name = ft_strdup(owner->pw_name);
+	fl->g_name = ft_strdup(group->gr_name);
 	fl->st_dev = sb.st_dev;
 	fl->st_mode = sb.st_mode;
 	fl->st_nlink = sb.st_nlink;
-	fl->st_uid = sb.st_uid;
-	fl->st_gid = sb.st_gid;
 	fl->st_size = sb.st_size;
 	fl->st_atimespec = sb.st_atimespec;
 	fl->st_mtimespec = sb.st_mtimespec;

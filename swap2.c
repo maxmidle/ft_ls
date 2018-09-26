@@ -3,9 +3,9 @@
 void	fl_swap_dev(file_info **fl)
 {
 	file_info *list;
+	dev_t tmp;
 
 	list = *fl;
-	dev_t tmp;
 
 	tmp = list->st_dev;
 	list->st_dev = list->next->st_dev;
@@ -15,9 +15,9 @@ void	fl_swap_dev(file_info **fl)
 void	fl_swap_mode(file_info **fl)
 {
 	file_info *list;
+	mode_t tmp;
 
 	list = *fl;
-	mode_t tmp;
 
 	tmp = list->st_mode;
 	list->st_mode = list->next->st_mode;
@@ -26,24 +26,27 @@ void	fl_swap_mode(file_info **fl)
 
 void	fl_swap_nlink(file_info **fl)
 {
-	file_info *list;
+	file_info	*list;
+	nlink_t		tmp;
+	char		*chtmp;
 
 	list = *fl;
-	nlink_t tmp;
 
 	tmp = list->st_nlink;
+	chtmp = list->f_nlink;
 	list->st_nlink = list->next->st_nlink;
+	list->f_nlink = list->next->f_nlink;
 	list->next->st_nlink = tmp;
+	list->next->f_nlink = chtmp;
 }
 
 void	fl_swap_uid(file_info **fl)
 {
 	file_info *list;
+	char *tmp;
 
 	list = *fl;
-	uid_t tmp;
-
-	tmp = list->st_uid;
-	list->st_uid = list->next->st_uid;
-	list->next->st_uid = tmp;
+	tmp = list->o_name;
+	list->o_name = list->next->o_name;
+	list->next->o_name = tmp;
 }

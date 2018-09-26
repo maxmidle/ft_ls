@@ -6,15 +6,20 @@
 # include <unistd.h>
 #include <dirent.h>
 #include <time.h>
+#include <grp.h>
+#include <pwd.h>
+#include <uuid/uuid.h>
 
 typedef struct	file_info
 {
 	char			*f_name;
+	char			*f_nlink;
+	char			*f_size;
+	char			*g_name;
+	char			*o_name;
 	dev_t			st_dev;
 	mode_t			st_mode;
 	nlink_t			st_nlink;
-	uid_t			st_uid;
-	gid_t			st_gid;
 	off_t			st_size;
 	struct timespec		st_atimespec;
 	struct timespec		st_mtimespec;

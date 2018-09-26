@@ -42,6 +42,10 @@ void	fl_free(file_info **fl)
 	while (list)
 	{
 		free(list->f_name);
+		free(list->f_nlink);
+		free(list->f_size);
+		free(list->o_name);
+		free(list->g_name);
 		list = list->next;
 		free(*fl);
 		*fl = list;
