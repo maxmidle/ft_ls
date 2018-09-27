@@ -10,6 +10,9 @@ void	fl_swap_dev(file_info **fl)
 	tmp = list->st_dev;
 	list->st_dev = list->next->st_dev;
 	list->next->st_dev = tmp;
+	tmp = list->st_rdev;
+	list->st_rdev = list->next->st_rdev;
+	list->next->st_rdev = tmp;
 }
 
 void	fl_swap_mode(file_info **fl)

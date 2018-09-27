@@ -31,7 +31,9 @@ char	*get_name(char *name)
 			tmp = i;
 		i++;
 	}
-	return (&name[tmp + 1]);
+	if (name[tmp] == '/')
+		tmp++;
+	return (&name[tmp]);
 }
 
 void	fl_free(file_info **fl)

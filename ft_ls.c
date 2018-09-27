@@ -44,7 +44,7 @@ int	multiple_dir(char *param, file_info **fl, int recu)
 	dir = 0;
 	list = *fl;
 	if (recu == 0)
-		multiple_file(*fl);
+		multiple_file(*fl, param);
 	while (list)
 	{
 		if (S_ISDIR(list->st_mode))
@@ -62,17 +62,20 @@ int	multiple_dir(char *param, file_info **fl, int recu)
 	return (1);
 }
 
-void	multiple_file(file_info *fl)
+void	multiple_file(file_info *fl, char *param)
 {
-	file_info *list;
+	file_info	*list;
+	int		*parc;
 
 	list = fl;
+	parc = get_parc(list, 0);
 	while (list)
 	{
-		if (S_ISREG(list->st_mode))
-			ft_printf("%s\n", list->f_name);
+		if (!(S_ISDIR(list->st_mode)))
+			print_longline(list, param, parc);
 		list = list->next;
 	}
+	free(parc);
 }
 
 int	handle_dir(char *param, file_info *fl)
@@ -86,14 +89,19 @@ int	handle_dir(char *param, file_info *fl)
 
 	path = NULL;
 	dirp = opendir(fl->f_name);
+	if (!dirp)
+	{
+		path = strerror(errno);
+		ft_printf("ft_ls: %s: %s\n", get_name(fl->f_name), path);
+		return (0);
+	}
 	fl_bis = NULL;
 	while ((dp = readdir(dirp)))
 	{
-		if ((ft_strchr(param, 'a') && dp->d_name[0] == '.') ||
-			 dp->d_name[0] != '.')
+		if (((ft_strchr(param, 'a') || ft_strchr(param, 'f')) && 
+			dp->d_name[0] == '.') || dp->d_name[0] != '.')
 		{
 			list = fl_bis;
-			ft_printf("%s\n", dp->d_name);
 			path = get_path(fl->f_name, dp->d_name);
 			lstat(path, &sb);
 			if (fl_bis == NULL)
@@ -108,6 +116,7 @@ int	handle_dir(char *param, file_info *fl)
 		}
 	}
 	ft_sort(param, &fl_bis);
+	print_file(fl_bis, param);
 	if (ft_strchr(param, 'R'))
 	{
 		closedir(dirp);

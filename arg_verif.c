@@ -39,7 +39,7 @@ int	param_verif(char *av, char **param)
 		else if (!ft_isparam(av[i]))
 		{
 			ft_printf("ft_ls: illegal option -- %c\n", av[i]);
- 			ft_printf("usage: ft_ls [-Ralrt] [file...]\n");
+ 			ft_printf("usage: ft_ls [-GRafglrt1] [file...]\n");
 			free(*param);
 			return (0);
 		}
@@ -86,6 +86,7 @@ file_info	*fl_new(struct stat sb, char *name)
 	fl->o_name = ft_strdup(owner->pw_name);
 	fl->g_name = ft_strdup(group->gr_name);
 	fl->st_dev = sb.st_dev;
+	fl->st_rdev = sb.st_rdev;
 	fl->st_mode = sb.st_mode;
 	fl->st_nlink = sb.st_nlink;
 	fl->st_size = sb.st_size;
@@ -93,6 +94,7 @@ file_info	*fl_new(struct stat sb, char *name)
 	fl->st_mtimespec = sb.st_mtimespec;
 	fl->st_ctimespec = sb.st_ctimespec;
 	fl->st_birthtimespec = sb.st_birthtimespec;
+	fl->st_blocks = sb.st_blocks;
 	fl->next = NULL;
 	return (fl);
 }

@@ -27,3 +27,15 @@ void	fl_swap_size(file_info **fl)
 	list->next->st_size = tmp;
 	list->next->f_size = chtmp;
 }
+
+void	fl_swap_block(file_info **fl)
+{
+	file_info	*list;
+	blkcnt_t	tmp;
+
+	list = *fl;
+
+	tmp = list->st_blocks;
+	list->st_blocks = list->next->st_blocks;
+	list->next->st_blocks = tmp;
+}
