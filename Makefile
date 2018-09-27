@@ -4,7 +4,8 @@ INCLUDE = ft_ls.h
 
 FLAG = -Wall -Werror -Wextra
 
-SRCS = arg_verif.c ft_is.c ft_ls.c basic_fun.c sort.c swap1.c swap2.c swap3.c
+SRCS = arg_verif.c ft_is.c ft_ls.c basic_fun.c sort.c swap1.c swap2.c swap3.c \
+	large_print.c date_print.c perm_print.c name_print.c minmaj_print.c
 
 OBJS = $(SRCS:.c=.o)
 
