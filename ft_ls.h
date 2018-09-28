@@ -89,6 +89,7 @@ void	print_type(file_info *fl);
 
 void	print_name(file_info *fl, char *param);
 void	print_colorname(file_info *fl);
+void	print_typename(file_info *fl);
 
 void	print_minmaj(file_info *fl);
 

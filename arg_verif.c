@@ -39,7 +39,8 @@ int	param_verif(char *av, char **param)
 		else if (!ft_isparam(av[i]))
 		{
 			ft_printf("ft_ls: illegal option -- %c\n", av[i]);
- 			ft_printf("usage: ft_ls [-GRSUacdfgilrtu1] [file...]\n");
+ 			ft_putstr("usage: ft_ls [-FGRSUacdfgilrtu1]");
+			ft_putstr(" [file...]\n");
 			free(*param);
 			return (0);
 		}
