@@ -52,10 +52,10 @@ void	fl_swap_birthtime(file_info **fl)
 	long longtmp;
 
 	list = *fl;
-	tmp = list->st_birthtimespec.tv_sec;
-	list->st_birthtimespec.tv_sec = list->next->st_birthtimespec.tv_sec;
-	list->next->st_birthtimespec.tv_sec = tmp;
-	longtmp = list->st_birthtimespec.tv_nsec;
-	list->st_birthtimespec.tv_nsec = list->next->st_birthtimespec.tv_nsec;
-	list->next->st_birthtimespec.tv_nsec = longtmp;
+	tmp = list->st_btimespec.tv_sec;
+	list->st_btimespec.tv_sec = list->next->st_btimespec.tv_sec;
+	list->next->st_btimespec.tv_sec = tmp;
+	longtmp = list->st_btimespec.tv_nsec;
+	list->st_btimespec.tv_nsec = list->next->st_btimespec.tv_nsec;
+	list->next->st_btimespec.tv_nsec = longtmp;
 }

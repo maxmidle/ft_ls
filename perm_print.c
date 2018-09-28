@@ -25,6 +25,7 @@ void	print_perm(file_info *fl)
 	if (fl->st_mode & S_IXOTH)
 		perm[8] = 'x';
 	ft_putstr(perm);
+	print_acl(fl);
 	free(perm);
 }
 

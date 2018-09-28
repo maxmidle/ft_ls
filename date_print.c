@@ -2,14 +2,15 @@
 
 void	print_date(file_info *fl, char *param)
 {
-	if (ft_strchr(param, 't'))
-		print_parcdate(fl->st_mtimespec.tv_sec);
-	else if (ft_strchr(param, 'u'))
+	if (ft_strchr(param, 'u'))
 		print_parcdate(fl->st_atimespec.tv_sec);
-	else if (ft_strchr(param, 't'))
-		print_parcdate(fl->st_birthtimespec.tv_sec);
+	else if (ft_strchr(param, 'U'))
+		print_parcdate(fl->st_btimespec.tv_sec);
+	else if (ft_strchr(param, 'c'))
+		print_parcdate(fl->st_ctimespec.tv_sec);
 	else
 		print_parcdate(fl->st_mtimespec.tv_sec);
+	ft_putchar(' ');
 }
 
 void	print_parcdate(time_t date)

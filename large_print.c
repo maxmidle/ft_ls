@@ -1,20 +1,24 @@
 #include "ft_ls.h"
 
-void	print_file(file_info *fl, char *param)
+void	print_file(file_info *fl, char *param, int single)
 {
 	int *parc;
 	file_info	*list;
 
 	parc = get_parc(fl, 1);
 	list = fl;
-	if (ft_strchr(param, 'l'))
+	if (ft_strchr(param, 'l') && single == 0)
 		ft_printf("total %d\n", get_total(fl));
 	while(list)
 	{
 		if (ft_strchr(param, 'l'))
 			print_longline(list, param, parc);
 		else
+		{
+			if (ft_strchr(param, 'i'))
+				ft_printf("%9-llu", list->st_ino);
 			print_name(list, param);
+		}
 		list = list->next;
 	}
 	free(parc);
@@ -22,10 +26,11 @@ void	print_file(file_info *fl, char *param)
 
 void	print_longline(file_info *fl, char *param, int *parc)
 {
+	if (ft_strchr(param, 'i'))
+		ft_printf("%d ", fl->st_ino);
 	print_perm(fl);
 	parcing(parc[0] - ft_strlen(fl->f_nlink) + 1);
-	ft_putstr(fl->f_nlink);
-	ft_putchar(' ');
+	ft_printf("%s ", fl->f_nlink);
 	if (!(ft_strchr(param, 'g')))
 	{
 		ft_putstr(fl->o_name);
@@ -44,7 +49,6 @@ void	print_longline(file_info *fl, char *param, int *parc)
 		ft_putstr(fl->f_size);
 	}
 	print_date(fl, param);
-	ft_putchar(' ');
 	print_name(fl, param);
 }
 

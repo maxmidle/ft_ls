@@ -28,10 +28,10 @@ int	ft_ls(char *param, int name_error, file_info **fl)
 
 int	single_file(char *param, file_info *fl)
 {
-	if (S_ISDIR(fl->st_mode))
+	if (S_ISREG(fl->st_mode) || ft_strchr(param, 'd'))
+		print_file(fl, param, 1);
+	else if (S_ISDIR(fl->st_mode))
 		handle_dir(param, fl);
-	else if (S_ISREG(fl->st_mode))
-		ft_printf("%s\n", fl->f_name);
 	return (1);
 }
 
@@ -43,11 +43,13 @@ int	multiple_dir(char *param, file_info **fl, int recu)
 
 	dir = 0;
 	list = *fl;
+	if (recu == 0 && !(ft_strchr(param, 'f')))
+		ft_sort(param, fl);
 	if (recu == 0)
 		multiple_file(*fl, param);
 	while (list)
 	{
-		if (S_ISDIR(list->st_mode))
+		if (S_ISDIR(list->st_mode) && !(ft_strchr(param, 'd')))
 		{
 			last = &list->f_name[ft_strlen(list->f_name) - 1];
 			if (recu == 0 || !(last[0] == '.' && last[1] == '\0'))
@@ -68,11 +70,24 @@ void	multiple_file(file_info *fl, char *param)
 	int		*parc;
 
 	list = fl;
-	parc = get_parc(list, 0);
+	
+	if (ft_strchr(param, 'd'))
+		parc = get_parc(list, 1);
+	else
+		parc = get_parc(list, 0);
 	while (list)
 	{
-		if (!(S_ISDIR(list->st_mode)))
-			print_longline(list, param, parc);
+		if (!(S_ISDIR(list->st_mode)) || ft_strchr(param, 'd'))
+		{
+			if (ft_strchr(param, 'l'))
+				print_longline(list, param, parc);
+			else
+			{
+				if (ft_strchr(param, 'i'))
+					ft_printf("%9-d", list->st_ino);
+				print_name(list, param);
+			}
+		}
 		list = list->next;
 	}
 	free(parc);
@@ -115,8 +130,9 @@ int	handle_dir(char *param, file_info *fl)
 			ft_strdel(&path);
 		}
 	}
-	ft_sort(param, &fl_bis);
-	print_file(fl_bis, param);
+	if (!(ft_strchr(param, 'f')))
+		ft_sort(param, &fl_bis);
+	print_file(fl_bis, param, 0);
 	if (ft_strchr(param, 'R'))
 	{
 		closedir(dirp);

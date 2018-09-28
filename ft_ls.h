@@ -1,8 +1,10 @@
 #ifndef FT_LS_H
 # define FT_LS_H
-# include "ft_printf/ft_printf.h"
+# include "libft/ft_printf.h"
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/acl.h>
+# include <sys/xattr.h>
 # include <unistd.h>
 # include <errno.h>
 #include <dirent.h>
@@ -20,13 +22,14 @@ typedef struct	file_info
 	char			*o_name;
 	dev_t			st_dev;
 	dev_t			st_rdev;
+	ino_t			st_ino;
 	mode_t			st_mode;
 	nlink_t			st_nlink;
 	off_t			st_size;
 	struct timespec		st_atimespec;
 	struct timespec		st_mtimespec;
 	struct timespec		st_ctimespec;
-	struct timespec		st_birthtimespec;
+	struct timespec		st_btimespec;
 	blkcnt_t		st_blocks;
 	struct file_info	*next;
 }		file_info;
@@ -50,10 +53,15 @@ void	fl_free(file_info **fl);
 int	fl_count(file_info **fl);
 
 void	ft_sort(char *param, file_info **fl);
+void	fl_swap(file_info **fl);
 void	ft_sort_t(file_info **fl);
 void	ft_sort_r(file_info **fl);
 void	ft_sort_ascii(file_info **fl);
-void	fl_swap(file_info **fl);
+
+void	ft_sort_S(file_info **fl);
+void	ft_sort_u(file_info **fl);
+void	ft_sort_U(file_info **fl);
+void	ft_sort_c(file_info **fl);
 
 void	fl_swap_dev(file_info **fl);
 void	fl_swap_mode(file_info **fl);
@@ -67,7 +75,7 @@ void	fl_swap_ctime(file_info **fl);
 void	fl_swap_birthtime(file_info **fl);
 void	fl_swap_block(file_info **fl);
 
-void	print_file(file_info *fl, char *param);
+void	print_file(file_info *fl, char *param, int single);
 void	print_longline(file_info *fl, char *param, int *parc);
 void	parcing(int i);
 int	*get_parc(file_info *fl, int fonly);
@@ -83,4 +91,6 @@ void	print_name(file_info *fl, char *param);
 void	print_colorname(file_info *fl);
 
 void	print_minmaj(file_info *fl);
+
+void	print_acl(file_info *fl);
 #endif

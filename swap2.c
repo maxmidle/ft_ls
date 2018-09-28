@@ -18,13 +18,17 @@ void	fl_swap_dev(file_info **fl)
 void	fl_swap_mode(file_info **fl)
 {
 	file_info *list;
-	mode_t tmp;
+	mode_t	tmp;
+	ino_t	inotmp;
 
 	list = *fl;
 
 	tmp = list->st_mode;
 	list->st_mode = list->next->st_mode;
 	list->next->st_mode = tmp;
+	inotmp = list->st_ino;
+	list->st_ino = list->next->st_ino;
+	list->next->st_ino = inotmp;
 }
 
 void	fl_swap_nlink(file_info **fl)

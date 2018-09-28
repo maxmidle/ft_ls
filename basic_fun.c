@@ -19,12 +19,13 @@ char	*get_name(char *name)
 {
 	int i;
 	int tmp;
+	int endtmp;
 
 	i = 0;
-	tmp = ft_strlen(name) - 1;
-	if (name[tmp] == '/')
-		name[tmp] = '\0';
 	tmp = 0;
+	endtmp = ft_strlen(name) - 1;
+	if (name[endtmp] == '/')
+		name[endtmp] = '\0';
 	while (name[i])
 	{
 		if (name[i] == '/')
@@ -33,6 +34,8 @@ char	*get_name(char *name)
 	}
 	if (name[tmp] == '/')
 		tmp++;
+	if (name[endtmp] == '\0')
+		name[endtmp] = '/';
 	return (&name[tmp]);
 }
 
