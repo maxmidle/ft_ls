@@ -27,7 +27,7 @@ void	print_file(file_info *fl, char *param, int single)
 void	print_longline(file_info *fl, char *param, int *parc)
 {
 	if (ft_strchr(param, 'i'))
-		ft_printf("%d ", fl->st_ino);
+		ft_printf("%9-d", fl->st_ino);
 	print_perm(fl);
 	parcing(parc[0] - ft_strlen(fl->f_nlink) + 1);
 	ft_printf("%s ", fl->f_nlink);
