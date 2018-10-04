@@ -111,6 +111,8 @@ int 		main(int ac, char **av)
 	name_error = 0;
 	fl = NULL;
 	param = arg_verif(ac, av, &name_error, &fl);
+	if (strchr(param, '1'))
+		ft_strplc(param, 'l', '1');
 	if (!param)
 		return (0);
 	ft_ls(param, name_error, &fl);
