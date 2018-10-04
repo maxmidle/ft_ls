@@ -1,5 +1,0 @@
-TDL :
-	-finir print long :
-		.print_perm(faire ACL);
-		.print_date
-		.print_name(couleur et symlink)
