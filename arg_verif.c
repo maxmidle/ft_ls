@@ -1,6 +1,6 @@
 #include "ft_ls.h"
 
-char	*arg_verif(int ac, char **av, int *name_error, file_info **fl)
+char		*arg_verif(int ac, char **av, int *name_error, file_info **fl)
 {
 	int	i;
 	int	ret;
@@ -22,10 +22,12 @@ char	*arg_verif(int ac, char **av, int *name_error, file_info **fl)
 		name_verif(av[i], name_error, fl);
 		i++;
 	}
+	if (*name_error == 1)
+		handle_error(av, ac);
 	return (param);
 }
 
-int	param_verif(char *av, char **param)
+int		param_verif(char *av, char **param)
 {
 	int	i;
 
@@ -49,15 +51,14 @@ int	param_verif(char *av, char **param)
 	return (1);
 }
 
-int	name_verif(char *name, int *error, file_info **fl)
+int		name_verif(char *name, int *error, file_info **fl)
 {
 	struct stat	sb;
-	file_info *list;
+	file_info	*list;
 
 	list = *fl;
 	if (lstat(name, &sb) == -1)
 	{
-		ft_printf("ft_ls: %s: No such file or directory\n", name);
 		*error = 1;
 		return (0);
 	}
@@ -101,10 +102,10 @@ file_info	*fl_new(struct stat sb, char *name)
 	return (fl);
 }
 
-int main(int ac, char **av)
+int 		main(int ac, char **av)
 {
-	char *param;
-	int	name_error;
+	char		*param;
+	int		name_error;
 	file_info	*fl;
 
 	name_error = 0;

@@ -34,64 +34,67 @@ typedef struct	file_info
 	struct file_info	*next;
 }		file_info;
 	
-int	ft_ls(char *param, int name_error, file_info **fl);
-int	single_file(char *param, file_info *fl);
-int	multiple_dir(char *param, file_info **fl, int recu);
-void	multiple_file(file_info *fl, char *param);
-int	handle_dir(char *param, file_info *fl);
+int		ft_ls(char *param, int name_error, file_info **fl);
+int		single_file(char *param, file_info *fl);
+int		multiple_dir(char *param, file_info **fl, int recu);
+void		multiple_file(file_info *fl, char *param);
+int		handle_dir(char *param, file_info *fl);
 
-char	*arg_verif(int ac, char **av, int *name_error, file_info **fl);
-int	name_verif(char *name, int *error, file_info **fl);
+char		*arg_verif(int ac, char **av, int *name_error, file_info **fl);
+int		name_verif(char *name, int *error, file_info **fl);
 file_info	*fl_new(struct stat sb, char *name);
-int	param_verif(char *av, char **param);
+int		param_verif(char *av, char **param);
 
-int	ft_isparam(char c);
+void		handle_error(char **av, int ac);
+void		print_error(char **av, int ac);
+int		ft_isparam(char c);
 
-char	*get_path(char *path, char *name);
-char	*get_name(char *name);
-void	fl_free(file_info **fl);
-int	fl_count(file_info **fl);
+char		*get_path(char *path, char *name);
+char		*get_name(char *name);
+void		fl_free(file_info **fl);
+int		fl_count(file_info **fl);
+file_info	*fl_fill(char *param, DIR *dirp, file_info *fl);
 
-void	ft_sort(char *param, file_info **fl);
-void	fl_swap(file_info **fl);
-void	ft_sort_t(file_info **fl);
-void	ft_sort_r(file_info **fl);
-void	ft_sort_ascii(file_info **fl);
+void		ft_sort(char *param, file_info **fl);
+void		fl_swap(file_info **fl);
+void		ft_sort_t(file_info **fl);
+void		ft_sort_r(file_info **fl);
+void		ft_sort_ascii(file_info **fl);
 
-void	ft_sort_S(file_info **fl);
-void	ft_sort_u(file_info **fl);
-void	ft_sort_U(file_info **fl);
-void	ft_sort_c(file_info **fl);
+void		ft_sort_S(file_info **fl);
+void		ft_sort_u(file_info **fl);
+void		ft_sort_U(file_info **fl);
+void		ft_sort_c(file_info **fl);
 
-void	fl_swap_dev(file_info **fl);
-void	fl_swap_mode(file_info **fl);
-void	fl_swap_nlink(file_info **fl);
-void	fl_swap_uid(file_info **fl);
-void	fl_swap_gid(file_info **fl);
-void	fl_swap_size(file_info **fl);
-void	fl_swap_atime(file_info **fl);
-void	fl_swap_mtime(file_info **fl);
-void	fl_swap_ctime(file_info **fl);
-void	fl_swap_birthtime(file_info **fl);
-void	fl_swap_block(file_info **fl);
+void		fl_swap_dev(file_info **fl);
+void		fl_swap_mode(file_info **fl);
+void		fl_swap_nlink(file_info **fl);
+void		fl_swap_uid(file_info **fl);
+void		fl_swap_gid(file_info **fl);
+void		fl_swap_size(file_info **fl);
+void		fl_swap_atime(file_info **fl);
+void		fl_swap_mtime(file_info **fl);
+void		fl_swap_ctime(file_info **fl);
+void		fl_swap_birthtime(file_info **fl);
+void		fl_swap_block(file_info **fl);
 
-void	print_file(file_info *fl, char *param, int single);
-void	print_longline(file_info *fl, char *param, int *parc);
-void	parcing(int i);
-int	*get_parc(file_info *fl, int fonly);
-int	get_total(file_info *fl);
+void		print_file(file_info *fl, char *param, int single);
+void		print_longline(file_info *fl, char *param, int *parc);
+void		parcing(int i);
+int		*get_parc(file_info *fl, int fonly);
+int		get_total(file_info *fl);
 
-void	print_date(file_info *fl, char *param);
-void	print_parcdate(time_t date);
+void		print_date(file_info *fl, char *param);
+void		print_parcdate(time_t date);
 
-void	print_perm(file_info *fl);
-void	print_type(file_info *fl);
+void		print_perm(file_info *fl);
+void		print_type(file_info *fl);
 
-void	print_name(file_info *fl, char *param);
-void	print_colorname(file_info *fl);
-void	print_typename(file_info *fl);
+void		print_name(file_info *fl, char *param);
+void		print_colorname(file_info *fl);
+void		print_typename(file_info *fl);
 
-void	print_minmaj(file_info *fl);
+void		print_minmaj(file_info *fl);
 
-void	print_acl(file_info *fl);
+void		print_acl(file_info *fl);
 #endif

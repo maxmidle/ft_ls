@@ -96,9 +96,6 @@ void	multiple_file(file_info *fl, char *param)
 int	handle_dir(char *param, file_info *fl)
 {
 	DIR		*dirp;
-	struct dirent	*dp;
-	struct stat	sb;
-	file_info	*list;
 	file_info	*fl_bis;
 	char		*path;
 
@@ -110,26 +107,7 @@ int	handle_dir(char *param, file_info *fl)
 		ft_printf("ft_ls: %s: %s\n", get_name(fl->f_name), path);
 		return (0);
 	}
-	fl_bis = NULL;
-	while ((dp = readdir(dirp)))
-	{
-		if (((ft_strchr(param, 'a') || ft_strchr(param, 'f')) && 
-			dp->d_name[0] == '.') || dp->d_name[0] != '.')
-		{
-			list = fl_bis;
-			path = get_path(fl->f_name, dp->d_name);
-			lstat(path, &sb);
-			if (fl_bis == NULL)
-				fl_bis = fl_new(sb, path);
-			else
-			{
-				while (list->next)
-					list = list->next;
-				list->next = fl_new(sb, path);
-			}
-			ft_strdel(&path);
-		}
-	}
+	fl_bis = fl_fill(param, dirp, fl);
 	if (!(ft_strchr(param, 'f')))
 		ft_sort(param, &fl_bis);
 	print_file(fl_bis, param, 0);
